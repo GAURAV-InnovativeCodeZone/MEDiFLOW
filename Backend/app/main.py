@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Import router
+from app.domains.appointments.router import router as appointment_router
+
 def create_app() -> FastAPI:
     """
     Application factory pattern. 
@@ -21,6 +24,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+     # REGISTER ROUTER
+    app.include_router(appointment_router)
+    
     @app.get("/health", tags=["System"])
     async def health_check():
         """
