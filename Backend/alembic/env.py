@@ -13,11 +13,13 @@ from alembic import context
 from app.core.config import settings
 from app.db.base import Base
 
-# 🔥 Import ALL models so Alembic can detect them
+# Import ALL models so Alembic can detect them =============================
 from app.domains.users import models as user_models
 from app.domains.patients import models as patient_models
 from app.domains.doctors import models as doctor_models
 from app.domains.appointments import models as appointment_models
+from app.domains.queues.models import Queue as queue_models
+# ===========================================================================
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
