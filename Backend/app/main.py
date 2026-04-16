@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Import router
 from app.domains.appointments.router import router as appointment_router
+from app.domains.queues.router import router as queues_router
+
 
 def create_app() -> FastAPI:
     """
@@ -24,8 +26,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-     # REGISTER ROUTER
-    app.include_router(appointment_router)
+     # Register router
+    app.include_router(appointment_router, prefix="/api/v1")
+    app.include_router(queues_router, prefix="/api/v1")
     
     @app.get("/health", tags=["System"])
     async def health_check():
