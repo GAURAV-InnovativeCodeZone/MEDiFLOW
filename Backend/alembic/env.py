@@ -19,6 +19,8 @@ from app.domains.patients import models as patient_models
 from app.domains.doctors import models as doctor_models
 from app.domains.appointments import models as appointment_models
 from app.domains.queues.models import Queue as queue_models
+from app.domains.attendance.models import Attendance as attendance_models
+
 # ===========================================================================
 
 # this is the Alembic Config object, which provides
