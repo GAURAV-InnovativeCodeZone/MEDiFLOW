@@ -2,7 +2,7 @@ import uuid
 from enum import Enum as PyEnum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, Uuid, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Integer, Boolean, Uuid, ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -44,6 +44,9 @@ class Queue(Base, TimestampMixin):
     
     # Simple integer for minutes. (e.g. 30 means 30 mins wait)
     estimated_time_mins: Mapped[int] = mapped_column(Integer, default=0)
+    
+    #FLAG: Tracks if the system automatically shifted this patient
+    auto_reassigned: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Relationships (unidirectional for now to keep things clean)
     doctor: Mapped["Doctor"] = relationship()

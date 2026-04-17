@@ -3,12 +3,13 @@ from sqlalchemy import String, Integer, Uuid, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
 from typing import TYPE_CHECKING
+from app.db.base import Base
+from app.db.mixins import TimestampMixin
 
 if TYPE_CHECKING:
     from app.domains.appointments.models import Appointment
-from app.domains.users.models import User
-from app.db.base import Base
-from app.db.mixins import TimestampMixin
+    from app.domains.attendance.models import Attendance
+    from app.domains.users.models import User
 
 class Patient(Base, TimestampMixin):
     """
@@ -33,4 +34,9 @@ class Patient(Base, TimestampMixin):
     # Link back to the User model (resolves via Base metadata registry)
     user: Mapped["User"] = relationship(back_populates="patient_profile")
     appointments: Mapped[list["Appointment"]] = relationship("Appointment", back_populates="patient")
+    
+    attendance_records: Mapped[list["Attendance"]] = relationship(
+    back_populates="patient",
+    cascade="all, delete-orphan"
+)
     
