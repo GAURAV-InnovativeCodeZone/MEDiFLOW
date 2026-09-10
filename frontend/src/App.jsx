@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import { useEffect } from 'react'
 import useAuthStore from './store/authStore'
 import Layout from './components/Layout'
+import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -24,6 +25,7 @@ function Private({ children, roles }) {
   if (roles && user && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />
   return children
 }
+
 function Public({ children }) {
   const { token } = useAuthStore()
   return token ? <Navigate to="/dashboard" replace /> : children
@@ -37,21 +39,28 @@ export default function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
-          <Route path="/login" element={<Public><Login /></Public>} />
+          {/* Landing page — public */}
+          <Route path="/" element={<Landing />} />
+
+          {/* Auth — redirect to dashboard if already logged in */}
+          <Route path="/login"    element={<Public><Login /></Public>} />
           <Route path="/register" element={<Public><Register /></Public>} />
-          <Route path="/" element={<Private><Layout /></Private>}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="appointments" element={<Appointments />} />
-            <Route path="doctors" element={<Doctors />} />
-            <Route path="patients" element={<Private roles={['admin','super_admin','doctor']}><Patients /></Private>} />
-            <Route path="records" element={<MedicalRecords />} />
-            <Route path="analytics" element={<Private roles={['admin','super_admin']}><Analytics /></Private>} />
-            <Route path="ai" element={<AIAssistant />} />
-            <Route path="audit" element={<Private roles={['admin','super_admin']}><AuditLogs /></Private>} />
-            <Route path="profile" element={<Profile />} />
+
+          {/* Protected routes — Layout wraps all dashboard pages */}
+          <Route element={<Private><Layout /></Private>}>
+            <Route path="/dashboard"   element={<Dashboard />} />
+            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/doctors"      element={<Doctors />} />
+            <Route path="/patients"     element={<Private roles={['admin','super_admin','doctor']}><Patients /></Private>} />
+            <Route path="/records"      element={<MedicalRecords />} />
+            <Route path="/analytics"    element={<Private roles={['admin','super_admin']}><Analytics /></Private>} />
+            <Route path="/ai"           element={<AIAssistant />} />
+            <Route path="/audit"        element={<Private roles={['admin','super_admin']}><AuditLogs /></Private>} />
+            <Route path="/profile"      element={<Profile />} />
           </Route>
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
